@@ -1,6 +1,6 @@
 from main import db
 
-class Users(db.Model):
+class User(db.Model):
     # Define the table name
     __tablename__ = "users"
     # Set the table attributes
