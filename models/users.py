@@ -8,10 +8,3 @@ class User(db.Model):
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
     admin = db.Column(db.Boolean(), default=False)
-    # Set the relationship with the landlords table
-    landlords = db.relationship(
-        "Landlord",
-        backref = "user",
-        cascade = "all, delete"
-
-    )

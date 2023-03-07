@@ -8,6 +8,6 @@ class Landlord(db.Model):
     landlord_name = db.Column(db.String(), nullable=False)
     landlord_email = db.Column(db.String())
     landlord_phone = db.Column(db.String())
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
 
 
