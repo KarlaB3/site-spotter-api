@@ -1,7 +1,11 @@
 from controllers.landlords_controller import landlords
-#from controllers.auth_controller import auth
+from controllers.centres_controller import centres
+from controllers.sites_controller import sites
+from controllers.users_controller import users
 
 registerable_controllers = [
-    #auth,
-    landlords
+    landlords,
+    centres,
+    sites,
+    users
 ]
