@@ -8,6 +8,11 @@ from marshmallow.exceptions import ValidationError
 # Set all routes related to Users to start with /users prefix
 users = Blueprint('users', __name__, url_prefix="/users")
 
+@users.errorhandler(ValidationError)
+def register_validation_error(error):
+    #print(error.messages)
+    return error.messages, 400
+
 # Register new users
 @users.post("/register")
 def register_user():
@@ -43,7 +48,3 @@ def login_user():
         return abort(401, "Incorrect username and/or password. Please try again")
     return jsonify("Login successful")
 
-@users.errorhandler(ValidationError)
-def register_validation_error(error):
-    #print(error.messages)
-    return error.messages, 400
