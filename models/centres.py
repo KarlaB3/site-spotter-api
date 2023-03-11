@@ -13,5 +13,9 @@ class Centre(db.Model):
     sales = db.Column(db.String())
     landlord_id = db.Column(db.Integer, db.ForeignKey("landlords.landlord_id"), nullable=False)
 
+    # relationships/backref to:
+    # sites 
+    # users
+
 
 

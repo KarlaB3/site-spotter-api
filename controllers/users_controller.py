@@ -1,30 +1,49 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.users import User
 from schemas.user_schema import user_schema, users_schema
-from flask_jwt_extended import jwt_required
+from main import bcrypt
+from marshmallow.exceptions import ValidationError
 
 # Set all routes related to Users to start with /users prefix
 users = Blueprint('users', __name__, url_prefix="/users")
 
-@users.get("/")
-def get_users():
-    # Retrieve all users from the users table
-    users_list = User.query.all()
-    result = users_schema.dump(users_list)
-    return jsonify(result)
+# Register new users
+@users.post("/register")
+def register_user():
+    # Retrieve user details
+    user_fields = user_schema.load(request.json)
+    # Check if user is already in the database using the email field
+    user = User.query.filter_by(email = user_fields["email"]).first()
+    # Display error message if the email is has already been registered to a user
+    if user:
+        return jsonify("Error: Email is already registered. Please login or register with a different email.")
+    # Crate user new using email and hashed password
+    user = User(email = user_fields["email"], password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8"))
+    # Set admin attribute to false
+    user.admin = False
+    # Add user to the database
+    db.session.add(user)
+    # Commit user changes to the database
+    db.session.commit()
+    return jsonify("User successfully registered")
+    # generate the token setting the identity (user.id) and expiry time (1 day)  --> ONLY IF YOU WANT TO USE AN ACCESS TOKEN, WHICH ISN'T NECESSARY
+    # token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=1)) 
+    # return {"username": user.username, "token": token}
 
+# Allow users to login
+@users.post("/login")
+def login_user():
+    # Retrieve user details
+    user_fields = user_schema.load(request.json)
+    # Check if user is already in the database using the email field
+    user = User.query.filter_by(email = user_fields["email"]).first()
+    # Display error message if the email and password combination is incorrect or does not exist
+    if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
+        return abort(401, "Incorrect username and/or password. Please try again")
+    return jsonify("Login successful")
 
-@users.get("/<int:user_id>")
-def get_user(user_id):
-    # Retrieve a user based on the user_id field
-    user = User.query.get(user_id)
-    if not user:
-        # Display error message if the User ID doesn't exist in the database
-        return jsonify("Error: User ID not found. Please search again using a valid User ID.")
-    # elif type(user) != int:
-    #     # Display error message if the User ID doesn't exist in the database
-    #     return jsonify("Error: Incorrect User ID search type. Please use a number.")
-    else:
-        result = user_schema.dump(user)
-        return jsonify(result)
+@users.errorhandler(ValidationError)
+def register_validation_error(error):
+    #print(error.messages)
+    return error.messages, 400

@@ -10,6 +10,6 @@ class User(db.Model):
     admin = db.Column(db.Boolean(), default=False)
 
     # relationships/backref to:
-    # landlords
-    # centres
+    # landlords - one to one
+    # centres 
     # sites 

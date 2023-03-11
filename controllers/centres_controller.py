@@ -7,24 +7,22 @@ from flask_jwt_extended import jwt_required
 # Set all routes related to Centres to start with /centres prefix
 centres = Blueprint('centres', __name__, url_prefix="/centres")
 
+# Retrieve all centres from the centres table
 @centres.get("/")
 def get_centres():
-    # Retrieve all centres from the centres table
     centres_list = Centre.query.all()
     result = centres_schema.dump(centres_list)
     return jsonify(result)
 
-
+# Retrieve a centre based on the centre_id field
 @centres.get("/<int:centre_id>")
 def get_centre(centre_id):
-    # Retrieve a centre based on the centre_id field
     centre = Centre.query.get(centre_id)
+    # Display error message if the Centre ID doesn't exist in the database
     if not centre:
-        # Display error message if the Centre ID doesn't exist in the database
         return jsonify("Error: Centre ID not found. Please search again using a valid Centre ID.")
     # elif type(centre) != int:
     #     # Display error message if the Centre ID doesn't exist in the database
     #     return jsonify("Error: Incorrect Centre ID search type. Please use a number.")
-    else:
-        result = centre_schema.dump(centre)
-        return jsonify(result)
+    result = centre_schema.dump(centre)
+    return jsonify(result)
