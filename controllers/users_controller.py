@@ -23,7 +23,7 @@ def register_user():
     # Display error message if the email is has already been registered to a user
     if user:
         return jsonify("Error: Email is already registered. Please login or register with a different email.")
-    # Crate user new using email and hashed password
+    # Crate user new using email and encyrpted password
     user = User(email = user_fields["email"], password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8"))
     # Set admin attribute to false
     user.admin = False
@@ -31,12 +31,12 @@ def register_user():
     db.session.add(user)
     # Commit user changes to the database
     db.session.commit()
-    return jsonify("User successfully registered")
+    return jsonify("Message: User successfully registered")
     # generate the token setting the identity (user.id) and expiry time (1 day)  --> ONLY IF YOU WANT TO USE AN ACCESS TOKEN, WHICH ISN'T NECESSARY
     # token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=1)) 
     # return {"username": user.username, "token": token}
 
-# Allow users to login
+# Existing user login
 @users.post("/login")
 def login_user():
     # Retrieve user details
@@ -45,6 +45,6 @@ def login_user():
     user = User.query.filter_by(email = user_fields["email"]).first()
     # Display error message if the email and password combination is incorrect or does not exist
     if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
-        return abort(401, "Incorrect username and/or password. Please try again")
-    return jsonify("Login successful")
+        return abort(401, "Error: Incorrect username and/or password. Please try again")
+    return jsonify("Message: Login successful")
 
