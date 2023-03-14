@@ -7,7 +7,7 @@ class LandlordSchema(ma.Schema):
     class Meta:
         # Declare landlord schema fields and display in order
         ordered = True
-        fields = ("landlord_id", "landlord_name", "landlord_email", "landlord_phone")
+        fields = ("landlord_id", "landlord_name", "landlord_email", "landlord_phone", "user_id")
     #centres = fields.List(fields.Nested(CentreSchema, only = ("centre_name", "suburb", "postcode", "state", "traffic", "sales")))
     #sites = fields.List(fields.Nested(SiteSchema, only = ("site_id", "size", "power", "location")))
 
