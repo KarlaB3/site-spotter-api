@@ -7,6 +7,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
+    admin = db.Column(db.Boolean(), default=False)
     landlords = db.relationship("Landlord", backref = "user")
 
     # relationships/backref to:

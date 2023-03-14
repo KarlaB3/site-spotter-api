@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request, abort
 from main import db
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.landlords import Landlord
+from models.users import User
 from schemas.landlord_schema import landlord_schema, landlords_schema
+from schemas.user_schema import user_schema, users_schema
 
 # Set all routes related to Landlords to start with /landlords prefix
 landlords = Blueprint('landlords', __name__, url_prefix="/landlords")
@@ -31,8 +33,6 @@ def get_landlord_id(landlord_id):
     # Display error message if the Landlord ID doesn't exist in the database
     if not id_landlord: 
         return abort(401, "Error: Landlord ID not found. Please try again using a valid Landlord ID.")
-    # elif isinstance(id_landlord, str):
-    #     abort(404, description = "Landlord ID not found")
     result = landlord_schema.dump(id_landlord)
     return jsonify(result)
 
@@ -42,12 +42,22 @@ def get_landlord_id(landlord_id):
 def create_landlord():
     # Retrieve landlord schema and fields
     landlord_fields = landlord_schema.load(request.json)
+    # Retrieve user ID from JWT
+    existing_user = get_jwt_identity()
+    # Check if user exists in the database
+    user = User.query.get(existing_user)
+    # Display error message if the user doesn't exist in the database
+    if not user:
+        return abort(401, "Error: User not found. Please try again using a registered user.")
+    # Display error message if the user isn't an administrator
+    if not user.admin:
+        return abort(401, "Error: You are not authorised to complete this action. Only administrators can create new Landlord records.")
     # Declare fields to be added as part of the landlord record
-    new_landlord = Landlord(
-    landlord_name = landlord_fields["landlord_name"],
-    landlord_email = landlord_fields["landlord_email"],
-    landlord_phone = landlord_fields["landlord_phone"],
-    user_id = landlord_fields["user_id"])
+    new_landlord = Landlord()
+    new_landlord.landlord_name = landlord_fields["landlord_name"]
+    new_landlord.landlord_email = landlord_fields["landlord_email"]
+    new_landlord.landlord_phone = landlord_fields["landlord_phone"]
+    new_landlord.user_id = existing_user
     # Add landlord to the database
     db.session.add(new_landlord)
     # Commit landlord changes to the database
@@ -58,6 +68,16 @@ def create_landlord():
 @landlords.delete("/<int:landlord_id>")
 @jwt_required()
 def delete_landlord(landlord_id):
+    # Retrieve user ID from JWT
+    existing_user = get_jwt_identity()
+    # Check if user exists in the database
+    user = User.query.get(existing_user)
+    # Display error message if the user doesn't exist in the database
+    if not user:
+        return abort(401, "Error: User not found. Please try again using a registered user.")
+    # Display error message if the user isn't an administrator
+    if not user.admin:
+        return abort(401, "Error: You are not authorised to complete this action. Only administrators can delete Landlord records.")
     # Check if landlord exists in the database using the landlord_id field
     landlord = Landlord.query.get(landlord_id)
     # Display error message if the landlord_id doesn't exist
@@ -67,29 +87,31 @@ def delete_landlord(landlord_id):
     db.session.delete(landlord)
     # Commit landlord changes to the database
     db.session.commit()
-    return jsonify("Message: Landlord successfully deleted."), 200
+    return jsonify("Message: Landlord successfully deleted."), 201
 
 # Update a landlord record using landlord_id field
 @landlords.put("/<int:landlord_id>")
 @jwt_required()
 def update_landlord(landlord_id):
-    # Check if landlord exists in the database using the landlord_id field
+    # Retrieve user ID from JWT
+    existing_user = get_jwt_identity()
+    # Check if user exists in the database
+    user = User.query.get(existing_user)
+    # Display error message if the user doesn't exist in the database
+    if not user:
+        return abort(401, "Error: User not found. Please try again using a registered user.")
+    # Display error message if the user isn't an administrator
+    if not user.admin:
+        return abort(401, "Error: You are not authorised to complete this action. Only administrators can delete Landlord records.")
     landlord = Landlord.query.get(landlord_id)
-    # Display error message if the landlord_id doesn't exist
     if not landlord:
-        return abort(400, description = "Error: Landlord record doesn't exist. Please try again.")
-    # Retrieve landlord schema and fields
+        return abort(400, "Error: Landlord record does not exist. Please try again.")
     landlord_fields = landlord_schema.load(request.json)
-     # Declare fields to be updated
-    landlord.name = landlord_fields["landlord_name"]
-    landlord.email = landlord_fields["landlord_email"]
-    landlord.phone = landlord_fields["landlord_phone"]
-    # Commit landlord updates to the database
+    landlord.landlord_name = landlord_fields["landlord_name"]
+    landlord.landlord_email = landlord_fields["landlord_email"]
+    landlord.landlord_phone = landlord_fields["landlord_phone"]
     db.session.commit()
     return jsonify(landlord_schema.dump(landlord)), 201
-
-
-
 
 # @landlords.errorhandler(404)
 # def not_found(e):
