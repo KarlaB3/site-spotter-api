@@ -172,12 +172,93 @@ All Site Spotter API endpoints are listed below, and in this Google Sheet: https
 
 
 ## Relationships
-ERD physical with attributes and values (pk/fk, format, syntax, null or not null) - screenshot  
+### Entity Relationship Diagram (ERD)
+![Site Spotter ERD](/images/site_spotter%20API%20ERD.jpg)
 
-Discuss the database relations to be implemented in your application i.e explain the relationships involved in your database based on an ERD that represents the planned database 
+Several one-to-many relationships are represented and implemented in the Site Spotter database:
+* Landlords, Centres and Sites are associated with one User, but one User can be associated with many Landlords, Centres and Sites.
+* One Centre is associated with one Landlord, but one Landlord can be associated with many Centres.
+* One Site is associated with one Centre, but one Centre can be associated with many Sites.
 
-Describe your projects models in terms of the relationships they have with each other i.e. Explain the models and relationships involved in the database based on the Flask / SQLAlchemy / etc code that you've implemented ( based on what you ended up coding in your API.Use terminology appropriate to Flask/SQLAlchemy/etc)  
+### Models
+Models were created to define each Site Spotter table name, attributes and relationships with other tables. 
+In Flask a model is a class representing a database table, where every class attribute reprsents a table field. For each model, a table name is defined, then attributes are declared including primary and foreign keys, data types and any other constraints.
 
+**Users**  
+In the Users model there are standard and admin users who can create and update landlord, centre and site records. Only admin users can delete landlord, centre and site records. Anyone with access to the API can read records.
+
+The ``` back_populates ``` method is used to create the one to many relationship with landlords, centres and sites.
+``` 
+class User(db.Model):
+    __tablename__ = "users"
+    user_id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(), nullable=False, unique=True)
+    password = db.Column(db.String(), nullable=False)
+    admin = db.Column(db.Boolean(), default=False)
+    landlord = db.relationship("Landlord", back_populates="user")
+    centre = db.relationship("Centre", back_populates="user")
+    site = db.relationship("Site", back_populates="user") 
+```
+
+**Landlords**  
+In the Landlords model user_id is set as the foreign key to create the connection between the landlords and users tables. Authentication is used in the landlords controller to ensure only users can create and update 
+landlord records, and only admin users can delete landlord records.
+
+The ``` back_populates ``` method is used to create the one to many relationship with users and centres and the cascade delete method associated with the centre relationship ensures that if a landlord is deleted then associated centres will be deleted, maintaining relationship integrity.
+
+```
+class Landlord(db.Model):
+    __tablename__ = "landlords"
+    landlord_id = db.Column(db.Integer, primary_key=True)
+    landlord_name = db.Column(db.String(), nullable=False)
+    landlord_email = db.Column(db.String())
+    landlord_phone = db.Column(db.String())
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    user = db.relationship("User", back_populates="landlord")
+    centre = db.relationship("Centre", back_populates="landlord", cascade="delete, merge, save-update")
+```
+**Centres**  
+In the Centres model landlord_id and user_id are set as the foreign keys to create the connection between the tables. Authentication is used in the centres controller to ensure only users can create and update 
+centre records, and only admin users can delete centre records.
+
+The ``` back_populates ``` method is used to create the one to many relationship with users and landlords and the cascade delete method associated with the site relationship ensures that if a centre is deleted then associated sites will be deleted, maintaining relationship integrity.
+
+```
+class Centre(db.Model):
+    __tablename__ = "centres"
+    centre_id = db.Column(db.Integer(), primary_key=True)
+    centre_name = db.Column(db.String(), nullable=False)
+    suburb = db.Column(db.String())
+    postcode = db.Column(db.String())
+    state = db.Column(db.String())
+    landlord_id = db.Column(db.Integer, db.ForeignKey("landlords.landlord_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    landlord = db.relationship("Landlord", back_populates="centre", )
+    user = db.relationship("User", back_populates="centre")
+    site = db.relationship("Site", back_populates="centre", cascade="delete, merge, save-update")
+```
+
+**Sites**  
+In the Sites model centre_id and user_id are set as the foreign keys to create the connection between the tables. Authentication is used in the sites controller to ensure only users can create and update 
+site records, and only admin users can delete site records.
+
+The ``` back_populates ``` method is used to create the one to many relationship with users and centres.
+
+```
+class Site(db.Model):
+    # Define the table name
+    __tablename__ = "sites"
+    # Set the table attributes
+    site_id = db.Column(db.Integer(), primary_key=True)
+    size = db.Column(db.String())
+    power = db.Column(db.Boolean())
+    location = db.Column(db.String())
+    centre_id = db.Column(db.Integer, db.ForeignKey("centres.centre_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    # Set the relationship with other tables
+    user = db.relationship("User", back_populates="site")
+    centre = db.relationship("Centre", back_populates="site")
+```
 
 ## Project Management
 Describe the way tasks are allocated and tracked in your project  
