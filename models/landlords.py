@@ -9,8 +9,7 @@ class Landlord(db.Model):
     landlord_email = db.Column(db.String())
     landlord_phone = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-    # Set the relationships to other tables
-    #centres = db.relationship("Centre", backref = "landlord", lazy = "True", cascade = "all, delete")
-    #sites = db.relationship("Site", backref = "landlord", lazy = "True", cascade = "all, delete")
-
+    # Set the relationship with other tables
+    user = db.relationship('User', backref='landlords')
+    centre = db.relationship("Centre", back_populates="landlord")
 

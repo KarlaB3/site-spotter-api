@@ -9,4 +9,9 @@ class Site(db.Model):
     power = db.Column(db.Boolean())
     location = db.Column(db.String())
     centre_id = db.Column(db.Integer, db.ForeignKey("centres.centre_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    # Set the relationship with other tables
+    user = db.relationship('User', backref='sites')
+    centre = db.relationship("Centre", back_populates="site")
+    #landlord = db.relationship('Landlord', backref='sites')
 
