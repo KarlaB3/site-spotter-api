@@ -1,5 +1,5 @@
 # SITE SPOTTER API 
-Site Spotter is a web application that lists casual leasing sites in shopping centres across Australia. The Site Spotter web API allows for user access to create, read, update and delete records in the Site Spotter PostgreSQL database containing retail property landlord, shopping centre and casual leasing site records.
+Site Spotter lists casual leasing sites in shopping centres across Australia. The Site Spotter API is a CRUD RESTful API that allows for user access to create, read, update and delete records in the Site Spotter PostgreSQL database containing retail property landlord, shopping centre and casual leasing site records.
 
 ##  Links
 GitHub Link: https://github.com/KarlaB3/site-spotter-api   
@@ -41,58 +41,137 @@ Flask is a Web Server Gateway Interface (WSGI) application framework. Flask is w
 
 Flask was chosen because it can support a Model, View and Controller (MVC) architectural pattern where each component handles a specific task in developing and executing an application. MVC allows for Site Spotter to more easily expand in size and scope and be developed and maintained by multiple developers (Hernandez 2021). 
 
-### Flask-SQLAlchemy
+### SQLAlchemy and Flask-SQLAlchemy
+Object Relational Mapping is a technique that allows for object-oriented programs and relational databases to connect. An Object Relational Mapper (ORM) is the tool that allows developers using object-oriented programming to interact with relational databases (Abba, I.V. 2022). 
 
-key functionalities
-benefits
+SQLAlchemy is the SQL toolkit used for the Site Spotter API because it can directly access and interact with the PostgreSQL database using Python objects and methods. The Flask-SQLAlchemy extension provides further SQLAlchemy support with tools and methods to simplify communication with databases.
 
-### Marshmallow
+SQLAlchemy is used in the Site Spotter API for:
+* Translating Python classes to tables and automatically loading tables from the PostgreSQL database.
+* Converting function calls and expressions to SQL statements, giving Site Spotter the full range of possible expressions, operators and functions and joins (SQLAlchemy, 2023).
+* Rather than writing raw SQL queries, SQLAlchemy uses a simple Pythonic domain language to more efficiently query data (SQLAlchemy, 2023). 
+* Supporting and enforcing meaningful relationship declarations, primary key constraints, mutability and cascade delete functions (SQLAlchemy, 2023).
+
+### Marshmallow and Flask-Marshmallow
+Marshmallow is a Python library used by Site Spotter to help convert data into a format suitable for display in JavaScript Object Notation (JSON) format. The Flask-Marshmallow extension provides additional integration support between Flask and Marshmallow and also integrates with Flask-SQLAlchemy. Site Spotter uses Marshmallow to create the database schemas by declaring the table fields to be retrieved and exposed in JSON format.
 
 ### Flask-JWT-Extended
+JSON web tokens (JWT) are used for handling user authentication and session management. Using JWT and the Flask-JWT-Extended extension, the Site Spotter API can create temporary access token (1 day validity) to preserve a user's authentication state during their Site Spotter session.
 
 ### Flask-Bcrypt
+Cryptography is used by Site Spotter for encrypting sensitive user data at rest. The Flask-bcrypt Python module invokes hashing of passwords when registering new users and storing existing user logins in a database.
 
-### psycopg2
+### Psycopg
+Pyscopg is a PostgreSQL database adapter for Python. It is used by Site Spotter to assist with connecting to the PostgreSQL database and running SQL queries against the database.
 
-### Other
-* VS Code
-* Ubuntu
-* Insomnia
+### Other Platforms
+* VS Code for code writing and testing.
+* Ubuntu operating system for postgreSQL database management.
+* Insomnia for testing the API.
 
 ## How to Set Up and Use Site Spotter
-instructions on how to set up the environment and users.
-install all files requirements.txt
-create db in postgres
-create db_dev user in postgres with password as xyz 
-DATABASE_URL = "postgresql+psycopg2://db_dev:123456@localhost:5432/site_spotter"
-SECRET_KEY = "s3cr3T_K3Y"
-grant all schema privileges to db_dev user, include error handling notes you've used in the past
+Step 1: Using the terminal window, create and navigate to the site_spotter folder.
 
-instructions on how to search in Insomnia, including representing spaces between strings in a record as %20 e.g, Lend%20Lease
-append any search URI with /search?[attribute]= then enter search term - note it must be as entered exactly in the database for Insomnia to return expected data
-users you can use for authentication testing:
-admin user
-{
-	"email": "admin@sitespotter.com.au",
-	"password": "admin111"
-}
+```mkdir directory_name && cd directory_name```
 
-standard user
-{
-	"email": "user1@sitespotter.com.au",
-	"password": "user1111"
-}
+Step 2: Create a virtual environment and activate it. 
 
-## How It Works
-Document all endpoints for your API. Endpoint documentation should include: 
-HTTP request verb GET POST PUT PATCH DELETE  
-Required data where applicable - what each end point achieves e.g. GET brings up a list of CML sites, POST adds a new centre and site. NEED ALL POSSIBLE END POINTS
-Expected response data “e.g. incorrect login, please try again” or “tables seeded”  when deleting landlord, centre still exists, when deleting centre, site must be deleted
-Authentication methods where applicable:
-    Admin users - CUD - any admin user can perform these functions as long as they're an administrator
-    Standard users - CU - any user can perform these functions as long as they're a user
-    Anyone can R 
+```virtualenv venv && source venv/bin/activate```
 
+Step 3: Initialise your git repo and add venv to the .gitignore file.
+
+``` git init && echo 'venv/' > .gitignore ```
+
+Step 4: Install all necessary modules from the requirements.txt file located in the zip file's 'src' folder.
+
+```pip install -r requirements.txt```
+
+Step 5: Activate PostgreSQL with your username or default username (postgres)/
+
+``` sudo -u postgres psql ```
+
+Step 6: Create the site_spotter database:
+
+``` CREATE DATABASE site_spotter;```
+
+Step 7: Create a database user called db_dev with password 123456.
+
+``` CREATE USER db_dev WITH PASSWORD '123456';```
+
+Step 8: Grant all database privileges to db_dev user.
+
+``` GRANT ALL PRIVILEGES ON DATABASE site_spotter to db_dev;```
+
+Step 9: In VS Code open the site_spotter directory and files and  create and seed the tables then run Flask.
+
+```
+code .
+flask db create
+flask db seed
+flask run
+```
+To drop tables from the database use the ``` flask db drop ``` command.
+
+#### Insomnia Tips
+In Insomnia, append any search URI with the specific attribute to be searched 
+
+``` /search?[attribute]=[search_term]```
+
+When searching for a string with spaces, reprsent the space using ```%20```. 
+
+For example:
+
+```/search?centre_name=Lend%20Lease```
+
+## API Endpoints
+All Site Spotter API endpoints are listed below, and in this Google Sheet: https://bit.ly/3JqsZZv
+
+| URI               | METHOD | DETAILS                                                                                   | EXPECTED RESPONSE DATA                                              | AUTHENTICATION                                  |
+| ----------------- | ------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------- |
+| /landlords/all    | GET    | Retrieve all landlord records                                                             | 200 OK for successful retrieval of record                           | N/A                                             |
+| /landlords/id     | GET    | Retrieve specific landlord record based on landlord_id query                              | 200 OK for successful retrieval of record                           | N/A                                             |
+| /landlords/id     | GET    | Retrieve specific landlord record based on landlord_id query                              | 404 NOT FOUND if landlord record doesn't exist                      | N/A                                             |
+| /landlords/search | GET    | Retrieve specific landlord record based on landlord_name query                            | 200 OK for successful retrieval of record                           | N/A                                             |
+| /landlords/search | GET    | Retrieve specific landlord record based on landlord_name query                            | 404 NOT FOUND if landlord record doesn't exist                      | N/A                                             |
+| /landlords/create | POST   | Create a new landlord record                                                              | 201 CREATED for successful record creation                          | Only registered users can create a new landlord |
+| /landlords/create | POST   | Create a new landlord record                                                              | 404 NOT FOUND if user record doesn't exist                          |                                                 |
+| /landlords/update | PUT    | Update landlord record based on landlord_id query                                         | 201 CREATED for successful record update                            | Only registered users can update a landlord     |
+| /landlords/update | PUT    | Update landlord record based on landlord_id query                                         | 404 NOT FOUND if user record doesn't exist                          |                                                 |
+| /landlords/delete | DELETE | Delete specific landlord record and associated centre record/s based on landlord_id query | 201 CREATED for successful record update                            | Only admin users can delete a landlord          |
+| /landlords/delete | DELETE | Delete specific landlord record and associated centre record/s based on landlord_id query | 404 NOT FOUND if user record doesn't exist                          |                                                 |
+| /landlords/delete | DELETE | Delete specific landlord record and associated centre record/s based on landlord_id query | 401 UNAUTHORIZED if not admin user                                  |                                                 |
+| /centres/all      | GET    | Retrieve all centre records                                                               | 200 OK for successful retrieval of record                           | N/A                                             |
+| /centres/id       | GET    | Retrieve specific centre record based on centre_id query                                  | 200 OK for successful retrieval of record                           | N/A                                             |
+| /centres/id       | GET    | Retrieve specific centre record based on centre_id query                                  | 404 NOT FOUND if centre record doesn't exist                        | N/A                                             |
+| /centres/search   | GET    | Retrieve specific centre record based on centre_name, suburb, postcode, state queries     | 200 OK for successful retrieval of record                           | N/A                                             |
+| /centres/search   | GET    | Retrieve specific centre record based on centre_name, suburb, postcode, state queries     | 404 NOT FOUND if centre record doesn't exist                        | N/A                                             |
+| /centres/create   | POST   | Create a new centre record                                                                | 201 CREATED for successful record creation                          | Only registered users can create a new centre   |
+| /centres/create   | POST   | Create a new centre record                                                                | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /centres/update   | PUT    | Update specific centre record based on centre_id query                                    | 201 CREATED for successful record update                            | Only registered users can update a centre       |
+| /centres/update   | PUT    | Update specific centre record based on centre_id query                                    | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /centres/delete   | DELETE | Delete specific centre record and associated site records based on centre_id query        | 201 CREATED for successful record update                            | Only admin users can delete a centre            |
+| /centres/delete   | DELETE | Delete specific centre record and associated site records based on centre_id query        | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /centres/delete   | DELETE | Delete specific centre record and associated site records based on centre_id query        | 401 UNAUTHORIZED if not admin user                                  | N/A                                             |
+| /sites/all        | GET    | Retrieve all site records                                                                 | 200 OK for successful retrieval of record                           | N/A                                             |
+| /sites/id         | GET    | Retrieve specific site record based on site_id query                                      | 200 OK for successful retrieval of record                           | N/A                                             |
+| /sites/id         | GET    | Retrieve specific site record based on site_id query                                      | 404 NOT FOUND if site record doesn't exist                          | N/A                                             |
+| /sites/search     | GET    | Retrieve specific site record based on size, power, location queries                      | 200 OK for successful retrieval of record                           | N/A                                             |
+| /sites/search     | GET    | Retrieve specific site record based on size, power, location queries                      | 404 NOT FOUND if site record doesn't exist                          | N/A                                             |
+| /sites/create     | POST   | Create a new site record                                                                  | 201 CREATED for successful record creation                          | Only registered users can create a new site     |
+| /sites/create     | POST   | Create a new site record                                                                  | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /sites/update     | PUT    | Update specific site record based on site_id query                                        | 201 CREATED for successful record update                            | Only registered users can update a site         |
+| /sites/update     | PUT    | Update specific site record based on site_id query                                        | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /sites/delete     | DELETE | Delete specific site record and associated site records based on site_id query            | 201 CREATED for successful record update                            | Only admin users can delete a site              |
+| /sites/delete     | DELETE | Delete specific site record and associated site records based on site_id query            | 404 NOT FOUND if user record doesn't exist                          | N/A                                             |
+| /sites/delete     | DELETE | Delete specific site record and associated site records based on site_id query            | 401 UNAUTHORIZED if not admin user                                  | N/A                                             |
+| /users/register   | POST   | Create new user record                                                                    | 409 CONFLICT if user is already registered                          | N/A                                             |
+| /users/register   | POST   | Create new user record                                                                    | User email and JSON web token on successful user registration       | N/A                                             |
+| /users/login      | POST   | Login registered user                                                                     | 401 UNAUTHORIZED if user record doesn't exist or password incorrect | N/A                                             |
+| /users/login      | POST   | Login registered user                                                                     | User email and JSON web token on successful user login              | N/A                                             |
+
+
+
+## Relationships
 ERD physical with attributes and values (pk/fk, format, syntax, null or not null) - screenshot  
 
 Discuss the database relations to be implemented in your application i.e explain the relationships involved in your database based on an ERD that represents the planned database 
@@ -109,14 +188,18 @@ Explain the project management process:
 what else?
 
 ## References
+Abba, I.V. 2022, What is an ORM – The Meaning of Object Relational Mapping Database Tools, 21 October, viewed 14 March 2023, https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools 
+
 Juba, S, Vannahme, A, & Volkov, A, 2015, Learning PostgreSQL, e-book, Packt Publishing, Birmingham, https://ebookcentral.proquest.com/lib/redhill-ebooks/reader.action?docID=4191180
 
-Hernandez, R 2021, ‘The Model View Controller Pattern – MVC Architecture and Frameworks Explained’, freeCodeCamp, 19 April, viewed 8 February 2023, https://www.freecodecamp.org/news/the-model-view-controller-pattern-mvc-architecture-and-frameworks-explained 
+Hernandez, R 2021, ‘The Model View Controller Pattern – MVC Architecture and Frameworks Explained’, freeCodeCamp, 19 April, viewed 14 March 2023, https://www.freecodecamp.org/news/the-model-view-controller-pattern-mvc-architecture-and-frameworks-explained 
 
-Hristozov, K 2019, ‘MySQL vs PostgreSQL -- Choose the Right Database for Your Project’, Okta Developer, web log post, 19 July, viewed 8 February 2023, https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres 
+Hristozov, K 2019, ‘MySQL vs PostgreSQL -- Choose the Right Database for Your Project’, Okta Developer, web log post, 19 July, viewed 14 March 2023, https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres 
 
-Panchenko, I 2021, PostgreSQL benefits and challenges: A snapshot, viewed 8 February 2023, https://www.infoworld.com/article/3619531/postgresql-benefits-and-challenges-a-snapshot.html 
+Panchenko, I 2021, PostgreSQL benefits and challenges: A snapshot, viewed 14 March 2023, https://www.infoworld.com/article/3619531/postgresql-benefits-and-challenges-a-snapshot.html 
 
-Python Basics 2021, What is Flask Python, viewed 8 February 2023, https://pythonbasics.org/what-is-flask-python 
+Python Basics 2021, What is Flask Python, viewed 14 March 2023, https://pythonbasics.org/what-is-flask-python 
 
-The PostgreSQL Global Development Group 2023, About, viewed 8 February 2023, https://www.postgresql.org/about 
+SQLAlchemy 2023, Features and Philosophy, viewed 14 March 2023, https://www.sqlalchemy.org/features.html
+
+The PostgreSQL Global Development Group 2023, About, viewed 14 March 2023, https://www.postgresql.org/about 
