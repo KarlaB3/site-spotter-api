@@ -6,7 +6,7 @@ class SiteSchema(ma.Schema):
         ordered = True
         fields = ("site_id", "size", "power", "location", "centre_id", "centre")
         load_only = ["centre_id"]
-    centre = ma.Nested("CentreSchema", only=("centre_name","suburb","postcode","state"))
+    centre = ma.Nested("CentreSchema", only=("centre_id","centre_name","suburb","postcode","state"))
 
 # Single site schema to retrieve one site record
 site_schema = SiteSchema()

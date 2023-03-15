@@ -30,8 +30,11 @@ instructions on how to search in Insomnia, including representing spaces between
 Document all endpoints for your API. Endpoint documentation should include: 
 HTTP request verb GET POST PUT PATCH DELETE  
 Required data where applicable - what each end point achieves e.g. GET brings up a list of CML sites, POST adds a new centre and site. NEED ALL POSSIBLE END POINTS
-Expected response data “e.g. incorrect login, please try again” or “tables seeded”
-Authentication methods where applicable  
+Expected response data “e.g. incorrect login, please try again” or “tables seeded”  when deleting landlord, centre still exists, when deleting centre, site must be deleted
+Authentication methods where applicable:
+    Admin users - CUD - any admin user can perform these functions as long as they're an administrator
+    Standard users - CU - any user can perform these functions as long as they're a user
+    Anyone can R 
 
 ERD physical with attributes and values (pk/fk, format, syntax, null or not null) - screenshot  
 

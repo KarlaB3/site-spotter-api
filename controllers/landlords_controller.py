@@ -5,7 +5,6 @@ from models.landlords import Landlord
 from models.users import User
 from schemas.landlord_schema import landlord_schema, landlords_schema
 
-
 # Set all routes related to Landlords to start with /landlords prefix
 landlords = Blueprint('landlords', __name__, url_prefix="/landlords")
 
@@ -37,7 +36,7 @@ def search_landlords():
         return abort(404, description = "Error: Landlord name not found. Please try again using a valid Landlord name.")
     
 # Create a new landlord record
-@landlords.post("/")
+@landlords.post("/create")
 @jwt_required()
 def create_landlord():
     # Retrieve landlord schema and fields
@@ -65,7 +64,7 @@ def create_landlord():
     return jsonify(landlord_schema.dump(new_landlord)), 201
 
 # Update a landlord record using landlord_id field
-@landlords.put("/<int:landlord_id>")
+@landlords.put("/update/<int:landlord_id>")
 @jwt_required()
 def update_landlord(landlord_id):
     # Retrieve user ID from JWT
@@ -90,7 +89,7 @@ def update_landlord(landlord_id):
     return jsonify(landlord_schema.dump(landlord)), 201
 
 # Delete a landlord record using landlord_id field
-@landlords.delete("/<int:landlord_id>")
+@landlords.delete("/delete/<int:landlord_id>")
 @jwt_required()
 def delete_landlord(landlord_id):
     # Retrieve user ID from JWT

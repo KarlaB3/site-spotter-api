@@ -24,43 +24,32 @@ def drop_db():
 @db_commands.cli.command("seed")
 def seed_db():
     # Users data to be seeded to the users table
-    admin_user = User(
+    admin_user1 = User(
         email = "admin@sitespotter.com.au",
-        password = bcrypt.generate_password_hash("admin000").decode("utf-8"),
+        password = bcrypt.generate_password_hash("admin111").decode("utf-8"),
+        admin = True
+    )
+
+    admin_user2 = User(
+        email = "admin2@sitespotter.com.au",
+        password = bcrypt.generate_password_hash("admin222").decode("utf-8"),
         admin = True
     )
 
     user1 = User(
-        email = "brandspace@westfield.com.au",
-        password = bcrypt.generate_password_hash("westfield111").decode("utf-8"),
+        email = "user1@sitespotter.com.au",
+        password = bcrypt.generate_password_hash("user1111").decode("utf-8"),
         admin = False
     )
 
     user2 = User(
-        email = "leasing@mirvac.com.au",
-        password = bcrypt.generate_password_hash("mirvac222").decode("utf-8"),
+        email = "user2@sitespotter.com.au",
+        password = bcrypt.generate_password_hash("user2222").decode("utf-8"),
         admin = False
     )
 
-    user3 = User(
-        email = "leasing@lendlease.com.au",
-        password = bcrypt.generate_password_hash("lendlease333").decode("utf-8"),
-        admin = False
-    )
-
-    user4 = User(
-        email = "popup.retail@vicinity.com.au",
-        password = bcrypt.generate_password_hash("vicinity444").decode("utf-8"),
-        admin = False
-    )
-
-    user5 = User(
-        email = "leasing@stockland.com.au",
-        password = bcrypt.generate_password_hash("stockland555").decode("utf-8"),
-        admin = False
-    )
     # Add user data to the users table
-    db.session.add_all([admin_user, user1, user2, user3, user4, user5])
+    db.session.add_all([admin_user1, admin_user2, user1, user2])
     # Commit user data to the users table
     db.session.commit()
 
@@ -83,21 +72,21 @@ def seed_db():
         landlord_name = "Lend Lease",
         landlord_email = "ashley.bell@lendlease.com",
         landlord_phone = "0477 716 559",
-        user_id = user3.user_id
+        user_id = user1.user_id
     )
 
     landlord4 = Landlord(
         landlord_name = "Vicinity Centres",
         landlord_email = "popup.retail@vicinity.com.au",
         landlord_phone = "03 7001 4000",
-        user_id = user4.user_id
+        user_id = user2.user_id
     )
 
     landlord5 = Landlord(
         landlord_name = "Stockland",
         landlord_email = "s-connect@stockland.com.au",
         landlord_phone = "1800 72 71 70",
-        user_id = user5.user_id
+        user_id = user2.user_id
     )
     # Add landlord data to the landlords table
     db.session.add_all([landlord1, landlord2, landlord3, landlord4, landlord5])
@@ -129,7 +118,7 @@ def seed_db():
         postcode = "6027",
         state = "WA",
         landlord_id = landlord3.landlord_id,
-        user_id = user3.user_id
+        user_id = user1.user_id
     )
 
     centre4 = Centre(
@@ -138,7 +127,7 @@ def seed_db():
         postcode = "5039",
         state = "SA",
         landlord_id = landlord4.landlord_id,
-        user_id = user4.user_id
+        user_id = user2.user_id
     )
     
     centre5 = Centre(
@@ -147,7 +136,7 @@ def seed_db():
         postcode = "3355",
         state = "VIC",
         landlord_id = landlord5.landlord_id,
-        user_id = user5.user_id
+        user_id = user1.user_id
     )
 
     centre6 = Centre(
@@ -156,7 +145,7 @@ def seed_db():
         postcode = "2617",
         state = "ACT",
         landlord_id = landlord1.landlord_id,
-        user_id = user1.user_id
+        user_id = user2.user_id
     )
     
     centre7 = Centre(
@@ -165,7 +154,7 @@ def seed_db():
         postcode = "4870",
         state = "QLD",
         landlord_id = landlord3.landlord_id,
-        user_id = user3.user_id
+        user_id = user1.user_id
     )
 
     centre8 = Centre(
@@ -174,7 +163,7 @@ def seed_db():
         postcode = "4870",
         state = "QLD",
         landlord_id = landlord5.landlord_id,
-        user_id = user5.user_id
+        user_id = user2.user_id
     )
 
     centre9 = Centre(
@@ -183,7 +172,7 @@ def seed_db():
         postcode = "2160",
         state = "NSW",
         landlord_id = landlord5.landlord_id,
-        user_id = user5.user_id
+        user_id = user1.user_id
     )
 
     centre10 = Centre(
@@ -192,7 +181,7 @@ def seed_db():
         postcode = "3074",
         state = "VIC",
         landlord_id = landlord3.landlord_id,
-        user_id = user3.user_id
+        user_id = user2.user_id
     )
     # Add centre data to the centres table
     db.session.add_all([centre1, centre2, centre3, centre4, centre5, centre6, centre7, centre8, centre9, centre10])
@@ -221,7 +210,7 @@ def seed_db():
         power = True,
         location = "Near food court",
         centre_id = centre3.centre_id,
-        user_id = user3.user_id
+        user_id = user1.user_id
     )
 
     site4 = Site(
@@ -229,7 +218,7 @@ def seed_db():
         power = False,
         location = "Fashion precinct",
         centre_id = centre4.centre_id,
-        user_id = user4.user_id
+        user_id = user2.user_id
     )
 
     site5 = Site(
@@ -237,7 +226,7 @@ def seed_db():
         power = False,
         location = "Centre Court",
         centre_id = centre5.centre_id,
-        user_id = user5.user_id
+        user_id = user1.user_id
     )
 
     site6 = Site(
@@ -245,7 +234,7 @@ def seed_db():
         power = True,
         location = "Centre Court",
         centre_id = centre1.centre_id,
-        user_id = user1.user_id
+        user_id = user2.user_id
     )
 
     site7 = Site(
@@ -253,7 +242,7 @@ def seed_db():
         power = False,
         location = "Fashion precinct",
         centre_id = centre9.centre_id,
-        user_id = user5.user_id
+        user_id = user1.user_id
     )
 
     site8 = Site(
@@ -261,7 +250,7 @@ def seed_db():
         power = True,
         location = "Near food court",
         centre_id = centre9.centre_id,
-        user_id = user5.user_id
+        user_id = user2.user_id
     )
 
     site9 = Site(
@@ -269,7 +258,7 @@ def seed_db():
         power = False,
         location = "Fashion precinct",
         centre_id = centre10.centre_id,
-        user_id = user3.user_id
+        user_id = user1.user_id
     )
 
     site10 = Site(
@@ -277,7 +266,7 @@ def seed_db():
         power = False,
         location = "Outside supermarket",
         centre_id = centre6.centre_id,
-        user_id = user3.user_id
+        user_id = user2.user_id
     )
     # Add site data to the sites table
     db.session.add_all([site1, site2, site3, site4, site5, site6, site7, site8, site9, site10])

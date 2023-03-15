@@ -94,7 +94,6 @@ def update_centre(centre_id):
     centre.postcode = centre_fields["postcode"]
     centre.state = centre_fields["state"]
     centre.user_id = existing_user
-    centre.landlord_id = existing_user
     # Commit centre changes to the database
     db.session.commit()
     return jsonify(centre_schema.dump(centre)), 201
