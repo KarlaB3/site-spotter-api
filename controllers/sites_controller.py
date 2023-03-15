@@ -44,25 +44,25 @@ def search_sites():
         return abort(404, description = "Error: Information not found.")
     
 # Create a new site record
-@sites.post("/")
+@sites.post("/create")
 @jwt_required()
 def create_site():
-    # Retrieve site schema and fields
-    site_fields = site_schema.load(request.json)
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
+    # Retrieve site schema and fields
+    site_fields = site_schema.load(request.json)
     # Declare fields to be added as part of the site record
     new_site = Site()
     new_site.size = site_fields["size"]
     new_site.power = site_fields["power"]
     new_site.location = site_fields["location"]
-    new_site.user_id = existing_user
-    new_site.centre_id = existing_user
+    new_site.centre_id = site_fields["centre_id"]
+    new_site.user_id = user_id
     # Add site to the database
     db.session.add(new_site)
     # Commit site changes to the database
@@ -70,37 +70,40 @@ def create_site():
     return jsonify(site_schema.dump(new_site)), 201
 
 # Update a site record using site_id field
-@sites.put("/<int:site_id>")
+@sites.put("/update/<int:site_id>")
 @jwt_required()
 def update_site(site_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
+    # Check if site exists in the database
     site = Site.query.get(site_id)
+    # Display error message if site doesn't exist in the database
     if not site:
         return abort(404, description = "Error: Site record does not exist. Please try again.")
+    # Retrieve site schema and fields
     site_fields = site_schema.load(request.json)
+    # Declare fields that can be updated as part of the site record
     site.size = site_fields["size"]
     site.power = site_fields["power"]
     site.location = site_fields["location"]
-    site.user_id = existing_user
-    site.centre_id = existing_user
+    site.user_id = user_id
     # Commit site changes to the database
     db.session.commit()
     return jsonify(site_schema.dump(site)), 201
 
 # Delete a site record using site_id field
-@sites.delete("/<int:site_id>")
+@sites.delete("/delete/<int:site_id>")
 @jwt_required()
 def delete_site(site_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")

@@ -13,4 +13,3 @@ class Site(db.Model):
     # Set the relationship with other tables
     user = db.relationship("User", back_populates="site")
     centre = db.relationship("Centre", back_populates="site")
-    #landlord = db.relationship("Landlord", primaryjoin="site")

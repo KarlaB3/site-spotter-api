@@ -53,7 +53,7 @@ def create_landlord():
     new_landlord.landlord_name = landlord_fields["landlord_name"]
     new_landlord.landlord_email = landlord_fields["landlord_email"]
     new_landlord.landlord_phone = landlord_fields["landlord_phone"]
-    new_landlord.user_id = user
+    new_landlord.user_id = user_id
     # Add landlord to the database
     db.session.add(new_landlord)
     # Commit landlord changes to the database
