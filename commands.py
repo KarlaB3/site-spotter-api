@@ -201,7 +201,7 @@ def seed_db():
     
     # Site data to be seeded to the sites table
     site1 = Site(
-        size = "4m x 4m",
+        size = "Medium",
         power = True,
         location = "Outside supermarket",
         centre_id = centre1.centre_id,
@@ -209,7 +209,7 @@ def seed_db():
     )
 
     site2 = Site(
-        size = "3m x 2m",
+        size = "Small",
         power = True,
         location = "Near food court",
         centre_id = centre2.centre_id,
@@ -217,7 +217,7 @@ def seed_db():
     )
 
     site3 = Site(
-        size = "5m x 3.3m",
+        size = "Large",
         power = True,
         location = "Near food court",
         centre_id = centre3.centre_id,
@@ -225,7 +225,7 @@ def seed_db():
     )
 
     site4 = Site(
-        size = "2m x 1.5m",
+        size = "Small",
         power = False,
         location = "Fashion precinct",
         centre_id = centre4.centre_id,
@@ -233,7 +233,7 @@ def seed_db():
     )
 
     site5 = Site(
-        size = "10m x 6.5m",
+        size = "Large",
         power = False,
         location = "Centre Court",
         centre_id = centre5.centre_id,
@@ -241,7 +241,7 @@ def seed_db():
     )
 
     site6 = Site(
-        size = "12m x 8m",
+        size = "Large",
         power = True,
         location = "Centre Court",
         centre_id = centre1.centre_id,
@@ -249,7 +249,7 @@ def seed_db():
     )
 
     site7 = Site(
-        size = "2m x 3m",
+        size = "Medium",
         power = False,
         location = "Fashion precinct",
         centre_id = centre9.centre_id,
@@ -257,7 +257,7 @@ def seed_db():
     )
 
     site8 = Site(
-        size = "5m x 5m",
+        size = "Large",
         power = True,
         location = "Near food court",
         centre_id = centre9.centre_id,
@@ -265,7 +265,7 @@ def seed_db():
     )
 
     site9 = Site(
-        size = "2m x 1m",
+        size = "Small",
         power = False,
         location = "Fashion precinct",
         centre_id = centre10.centre_id,
@@ -273,7 +273,7 @@ def seed_db():
     )
 
     site10 = Site(
-        size = "3m x 2.5m",
+        size = "Small",
         power = False,
         location = "Outside supermarket",
         centre_id = centre6.centre_id,

@@ -5,7 +5,6 @@ from models.landlords import Landlord
 from models.users import User
 from schemas.landlord_schema import landlord_schema, landlords_schema
 
-
 # Set all routes related to Landlords to start with /landlords prefix
 landlords = Blueprint('landlords', __name__, url_prefix="/landlords")
 
@@ -85,6 +84,7 @@ def update_landlord(landlord_id):
     landlord.landlord_name = landlord_fields["landlord_name"]
     landlord.landlord_email = landlord_fields["landlord_email"]
     landlord.landlord_phone = landlord_fields["landlord_phone"]
+    # Commit landlord changes to the database
     db.session.commit()
     return jsonify(landlord_schema.dump(landlord)), 201
 
@@ -111,4 +111,4 @@ def delete_landlord(landlord_id):
     db.session.delete(landlord)
     # Commit landlord changes to the database
     db.session.commit()
-    return jsonify("Message: Landlord successfully deleted."), 204
+    return jsonify("Message: Landlord successfully deleted."), 201

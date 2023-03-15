@@ -27,7 +27,7 @@ def get_centre(centre_id):
     result = centre_schema.dump(centre)
     return jsonify(result), 200
     
-# Retrieve a centre based on the centre_name field
+# Retrieve a centre based on the centre attributes
 @centres.get("/search")
 def search_centres():
     if request.args.get("centre_name"):
@@ -87,16 +87,17 @@ def update_centre(centre_id):
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
-    # Display error message if the user isn't an administrator
-    if not user.admin:
-        return abort(401, description = "Error: You are not authorised to complete this action. Only administrators can delete Centre records.")
     centre = Centre.query.get(centre_id)
     if not centre:
         return abort(404, description = "Error: Centre record does not exist. Please try again.")
     centre_fields = centre_schema.load(request.json)
     centre.centre_name = centre_fields["centre_name"]
-    centre.centre_email = centre_fields["centre_email"]
-    centre.centre_phone = centre_fields["centre_phone"]
+    centre.suburb = centre_fields["suburb"]
+    centre.postcode = centre_fields["postcode"]
+    centre.state = centre_fields["state"]
+    centre.user_id = existing_user
+    centre.landlord_id = existing_user
+    # Commit centre changes to the database
     db.session.commit()
     return jsonify(centre_schema.dump(centre)), 201
 
@@ -123,4 +124,4 @@ def delete_centre(centre_id):
     db.session.delete(centre)
     # Commit centre changes to the database
     db.session.commit()
-    return jsonify("Message: Centre successfully deleted."), 204
+    return jsonify("Message: Centre successfully deleted."), 201

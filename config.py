@@ -5,6 +5,7 @@ class Config(object):
     SQLALCHEMY_TRACK_NOTIFICATIONS = False
     # Get the value of the secret key from .env
     JWT_SECRET_KEY = os.environ.get("SECRET_KEY")
+    JSON_SORT_KEYS = False
     @property
     def SQLALCHEMY_DATABASE_URI(self):
         # Get the value of the database URL from .env
