@@ -13,7 +13,7 @@ Many retailers are now wary to commit to long term lease deals spanning over yea
 Casual lease sites are typically listed on individual shopping centre websites, and teams of leasing executives are employed by landlords to proactively approach and sell these sites to retailers. On the flipside, retailers must contact individual landlords and shopping centres to enquire about casual leasing sites. This creates additional effort on the part of both landlords and retailers to find relevant sites for casual lease.
 
 ## The Solution
-Site Spotter has been designed to take the work out of finding and selling casual leasing sites by aggregating a database of shopping centre landlords, retailers and sites across Australia. 
+Site Spotter takes the work out of finding and selling casual leasing sites by aggregating a database of shopping centre landlords, retailers and sites across Australia. 
 
 Information about landlords, the centres they own and the available sites within those centres is readily available via the Site Spotter API and can be searched by centre location (state, suburb, postcode) and site metrics (size, power availability, location within the centre). 
 
@@ -117,7 +117,7 @@ In Insomnia, append any search URI with the specific attribute to be searched
 
 ``` /search?[attribute]=[search_term]```
 
-When searching for a string with spaces, reprsent the space using ```%20```. 
+When searching for a string with spaces, represent the space using ```%20```. 
 
 For example:
 
@@ -261,12 +261,30 @@ class Site(db.Model):
 ```
 
 ## Project Management
-Describe the way tasks are allocated and tracked in your project  
-Public Trello board and link: https://trello.com/b/6sGcY3EH/sitespotter-api   
-Explain the project management process:
-* Method used - agile methodology
-* Priorities 
-what else?
+The project and associated tasks were allocated and tracked using Trello. View the Trello project board here: https://trello.com/b/6sGcY3EH/sitespotter-api  
+
+The project was broken down into five stages.
+
+1. Initial Planning  
+In the initial planning stage a full outline of the tasks and sub-tasks required to complete the project were listed in Trello in order of what was to be actioned and completed first. This ensured no steps were missed and provided a useful guideline for the order of operations.
+
+![Site Spotter project step 1](/images/Step%201%20-%20elements%20to%20be%20started.png)
+
+2. Planning Progress  
+The first step, which was the initial approval of the API idea by Coder Academy educators, was critical to moving onto the rest of the project. Upon approval, an API plan was developed including a full problem and solution scope, target users, etc. Then decisions on the database design were made including defining database requirements, table attributes, constraints, relationships, data normalisation and designing an ERD.
+
+![Site Spotter project step 2](/images/Database%20design.png)
+
+3. Development & Testing  
+The development and testing stages took the majority of project time. A checklist of development requirements was created to ensure no key steps were missed, and the API met all required planning and code elements. Testing was handled in Insomnia, to ensure the API produced the expected data and error messages.
+
+![Site Spotter project step 3](/images/Development.png)
+
+4. Documentation  
+In this stage documentation (README.md) was written containing information about the problem solved by the Site Spotter API, how to set up and use Site Spotter, endpoints and relationships and the project management process.
+
+5. Completion & Submission  
+The fifth and final stage was to package up all files and documentation into a .zip file as per the assessment requirements, and submit via Canvas.
 
 ## References
 Abba, I.V. 2022, What is an ORM – The Meaning of Object Relational Mapping Database Tools, 21 October, viewed 14 March 2023, https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools 
