@@ -36,7 +36,7 @@ Authentication methods where applicable
 ERD physical with attributes and values (pk/fk, format, syntax, null or not null) - screenshot  
 
 Discuss the database relations to be implemented in your application i.e explain the relationships involved in your database based on an ERD that represents the planned database 
-  
+
 Describe your projects models in terms of the relationships they have with each other i.e. Explain the models and relationships involved in the database based on the Flask / SQLAlchemy / etc code that you've implemented ( based on what you ended up coding in your API.Use terminology appropriate to Flask/SQLAlchemy/etc)  
 
 
@@ -46,4 +46,4 @@ Public Trello board and link: https://trello.com/b/6sGcY3EH/sitespotter-api
 Explain the project management process:
 * Method used - agile methodology
 * Priorities 
-
+what else?
