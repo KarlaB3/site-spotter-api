@@ -2,7 +2,7 @@
 
 ## The Problem
 What is the problem
-Why is it a problem
+Why is it a problem that needs solving?
 
 ## The Solution
 Site Spotter is…  a blah blah blah
@@ -32,8 +32,11 @@ HTTP request verb GET POST PUT PATCH DELETE
 Required data where applicable - what each end point achieves e.g. GET brings up a list of CML sites, POST adds a new centre and site. NEED ALL POSSIBLE END POINTS
 Expected response data “e.g. incorrect login, please try again” or “tables seeded”
 Authentication methods where applicable  
+
 ERD physical with attributes and values (pk/fk, format, syntax, null or not null) - screenshot  
-Discuss the database relations to be implemented in your application i.e explain the relationships involved in your database based on an ERD that represents the planned database   
+
+Discuss the database relations to be implemented in your application i.e explain the relationships involved in your database based on an ERD that represents the planned database 
+  
 Describe your projects models in terms of the relationships they have with each other i.e. Explain the models and relationships involved in the database based on the Flask / SQLAlchemy / etc code that you've implemented ( based on what you ended up coding in your API.Use terminology appropriate to Flask/SQLAlchemy/etc)  
 
 

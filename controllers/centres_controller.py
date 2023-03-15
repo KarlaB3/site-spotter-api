@@ -2,10 +2,8 @@ from flask import Blueprint, jsonify, request, abort
 from main import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.centres import Centre
-from models.landlords import Landlord
 from models.users import User
 from schemas.centre_schema import centre_schema, centres_schema
-from schemas.landlord_schema import landlord_schema, landlords_schema
 
 # Set all routes related to Centres to start with /centres prefix
 centres = Blueprint('centres', __name__, url_prefix="/centres")

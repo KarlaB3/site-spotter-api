@@ -3,11 +3,7 @@ from main import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.sites import Site
 from schemas.site_schema import site_schema, sites_schema
-from models.centres import Centre
-from models.landlords import Landlord
 from models.users import User
-from schemas.centre_schema import centre_schema, centres_schema
-from schemas.landlord_schema import landlord_schema, landlords_schema
 
 # Set all routes related to Sites to start with /sites prefix
 sites = Blueprint('sites', __name__, url_prefix="/sites")
@@ -28,13 +24,6 @@ def get_site(site_id):
         return abort(404, "Error: Site ID not found. Please search again using a valid Site ID.")
     result = site_schema.dump(site)
     return jsonify(result), 200
-
-# # Retrieve a site with landlord data based on the site_id field
-# @sites.get("/join/<int:site_id>")
-# def get_site_all(site_id):
-#     join_site = db.session.query(Site).join(Landlord).filter(Landlord.landlord_id == site_id).all()
-#     result = site_schema.dump(join_site)
-#     return jsonify(result)
 
 # Retrieve a site based on the site attributes
 @sites.get("/search")

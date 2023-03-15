@@ -1,15 +1,12 @@
-from wsgiref import validate
 from main import ma
-from marshmallow.validate import Length
 
 class UserSchema(ma.Schema):
     class Meta:
         # Declare user schema fields and display in order
         ordered = True
         fields = ("user_id", "email", "password")
-        # Validate minimum length requirement for password and set required fields
-        password = ma.String(validate = Length(min = 8))
-        email = ma.String(required = True)
+        email = ma.String(required=True)
+        password = ma.String(required=True)
 
 # Single user schema to retrieve one user record
 user_schema = UserSchema()

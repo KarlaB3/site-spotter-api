@@ -4,16 +4,10 @@ from main import db
 from models.users import User
 from schemas.user_schema import user_schema, users_schema
 from main import bcrypt
-from flask_jwt_extended import create_access_token
-#from marshmallow.exceptions import ValidationError  ---> FOR ERROR HANDLING
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 # Set all routes related to Users to start with /users prefix
 users = Blueprint('users', __name__, url_prefix="/users")
-
-# @users.errorhandler(ValidationError) ---> FOR ERROR HANDLING
-# def register_validation_error(error):
-#     #print(error.messages)
-#     return error.messages, 400
 
 # Register new users
 @users.post("/register")
@@ -48,4 +42,3 @@ def login_user():
      # Generate the JSON web token with 1 day expiry 
     token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=1)) 
     return {"email": user.email, "token": token}
-

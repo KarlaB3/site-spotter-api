@@ -5,6 +5,7 @@ from models.landlords import Landlord
 from models.users import User
 from schemas.landlord_schema import landlord_schema, landlords_schema
 
+
 # Set all routes related to Landlords to start with /landlords prefix
 landlords = Blueprint('landlords', __name__, url_prefix="/landlords")
 
