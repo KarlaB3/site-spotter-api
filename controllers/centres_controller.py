@@ -48,26 +48,26 @@ def search_centres():
         return abort(404, description = "Error: Information not found.")
     
 # Create a new centre record
-@centres.post("/")
+@centres.post("/create")
 @jwt_required()
 def create_centre():
-    # Retrieve centre schema and fields
-    centre_fields = centre_schema.load(request.json)
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
+    # Retrieve centre schema and fields
+    centre_fields = centre_schema.load(request.json)
     # Declare fields to be added as part of the centre record
     new_centre = Centre()
     new_centre.centre_name = centre_fields["centre_name"]
     new_centre.suburb = centre_fields["suburb"]
     new_centre.postcode = centre_fields["postcode"]
     new_centre.state = centre_fields["state"]
-    new_centre.user_id = existing_user
-    new_centre.landlord_id = existing_user
+    new_centre.landlord_id = centre_fields["landlord_id"]
+    new_centre.user_id = user_id
     # Add centre to the database
     db.session.add(new_centre)
     # Commit centre changes to the database
@@ -75,37 +75,41 @@ def create_centre():
     return jsonify(centre_schema.dump(new_centre)), 201
 
 # Update a centre record using centre_id field
-@centres.put("/<int:centre_id>")
+@centres.put("/update/<int:centre_id>")
 @jwt_required()
 def update_centre(centre_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
+    # Check if centre exists in the database
     centre = Centre.query.get(centre_id)
+    # Display error message if centre doesn't exist in the database
     if not centre:
         return abort(404, description = "Error: Centre record does not exist. Please try again.")
+    # Retrieve centre schema and fields
     centre_fields = centre_schema.load(request.json)
+    # Declare fields that can be updated as part of the centre record
     centre.centre_name = centre_fields["centre_name"]
     centre.suburb = centre_fields["suburb"]
     centre.postcode = centre_fields["postcode"]
     centre.state = centre_fields["state"]
-    centre.user_id = existing_user
+    centre.user_id = user_id
     # Commit centre changes to the database
     db.session.commit()
     return jsonify(centre_schema.dump(centre)), 201
 
 # Delete a centre record using centre_id field
-@centres.delete("/<int:centre_id>")
+@centres.delete("/delete/<int:centre_id>")
 @jwt_required()
 def delete_centre(centre_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")

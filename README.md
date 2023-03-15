@@ -25,6 +25,19 @@ SECRET_KEY = "s3cr3T_K3Y"
 grant all schema privileges to db_dev user, include error handling notes you've used in the past
 
 instructions on how to search in Insomnia, including representing spaces between strings in a record as %20 e.g, Lend%20Lease
+append any search URI with /search?[attribute]= then enter search term - note it must be as entered exactly in the database for Insomnia to return expected data
+users you can use for authentication testing:
+admin user
+{
+	"email": "admin@sitespotter.com.au",
+	"password": "admin111"
+}
+
+standard user
+{
+	"email": "user1@sitespotter.com.au",
+	"password": "user1111"
+}
 
 ## How It Works
 Document all endpoints for your API. Endpoint documentation should include: 

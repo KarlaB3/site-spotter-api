@@ -34,29 +34,26 @@ def search_landlords():
         return jsonify(result), 200
     else:
         return abort(404, description = "Error: Landlord name not found. Please try again using a valid Landlord name.")
-    
+
 # Create a new landlord record
 @landlords.post("/create")
 @jwt_required()
 def create_landlord():
-    # Retrieve landlord schema and fields
-    landlord_fields = landlord_schema.load(request.json)
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
-    # Display error message if the user isn't an administrator
-    if not user.admin:
-        return abort(401, description = "Error: You are not authorised to complete this action. Only administrators can create new Landlord records.")
+    # Retrieve landlord schema and fields
+    landlord_fields = landlord_schema.load(request.json)
     # Declare fields to be added as part of the landlord record
     new_landlord = Landlord()
     new_landlord.landlord_name = landlord_fields["landlord_name"]
     new_landlord.landlord_email = landlord_fields["landlord_email"]
     new_landlord.landlord_phone = landlord_fields["landlord_phone"]
-    new_landlord.user_id = existing_user
+    new_landlord.user_id = user
     # Add landlord to the database
     db.session.add(new_landlord)
     # Commit landlord changes to the database
@@ -68,19 +65,20 @@ def create_landlord():
 @jwt_required()
 def update_landlord(landlord_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
-    # Display error message if the user isn't an administrator
-    if not user.admin:
-        return abort(401, description = "Error: You are not authorised to complete this action. Only administrators can update Landlord records.")
+    # Check if landlord exists in the database
     landlord = Landlord.query.get(landlord_id)
+    # Display error message if the landlord doesn't exist in the database
     if not landlord:
         return abort(404, description = "Error: Landlord record does not exist. Please try again.")
+    # Retrieve landlord schema and fields
     landlord_fields = landlord_schema.load(request.json)
+    # Declare fields that can be updated as part of the landlord record
     landlord.landlord_name = landlord_fields["landlord_name"]
     landlord.landlord_email = landlord_fields["landlord_email"]
     landlord.landlord_phone = landlord_fields["landlord_phone"]
@@ -93,9 +91,9 @@ def update_landlord(landlord_id):
 @jwt_required()
 def delete_landlord(landlord_id):
     # Retrieve user ID from JWT
-    existing_user = get_jwt_identity()
+    user_id = get_jwt_identity()
     # Check if user exists in the database
-    user = User.query.get(existing_user)
+    user = User.query.get(user_id)
     # Display error message if the user doesn't exist in the database
     if not user:
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
