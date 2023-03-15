@@ -13,7 +13,7 @@ class Centre(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     # Set the relationship with other tables
     landlord = db.relationship("Landlord", back_populates="centre")
-    user = db.relationship('User', backref='centres')
+    user = db.relationship("User", back_populates="centre")
     site = db.relationship("Site", back_populates="centre")
 
 

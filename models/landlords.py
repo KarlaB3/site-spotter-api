@@ -10,6 +10,7 @@ class Landlord(db.Model):
     landlord_phone = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     # Set the relationship with other tables
-    user = db.relationship('User', backref='landlords')
+    user = db.relationship("User", back_populates="landlord")
     centre = db.relationship("Centre", back_populates="landlord")
+    #site = db.relationship("Site", primaryjoin="landlord")
 

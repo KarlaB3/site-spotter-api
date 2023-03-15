@@ -15,6 +15,17 @@ Why have you chosen this database system? What are the drawbacks compared to oth
 Identify and discuss the key functionalities and benefits of an ORM
 Detail any third party services that your app will use - what and why
 
+## How to Set Up the Environment & Use
+instructions on how to set up the environment and users.
+install all files requirements.txt
+create db in postgres
+create db_dev user in postgres with password as xyz 
+DATABASE_URL = "postgresql+psycopg2://db_dev:123456@localhost:5432/site_spotter"
+SECRET_KEY = "s3cr3T_K3Y"
+grant all schema privileges to db_dev user, include error handling notes you've used in the past
+
+instructions on how to search in Insomnia, including representing spaces between strings in a record as %20 e.g, Lend%20Lease
+
 ## How It Works
 Document all endpoints for your API. Endpoint documentation should include: 
 HTTP request verb GET POST PUT PATCH DELETE  

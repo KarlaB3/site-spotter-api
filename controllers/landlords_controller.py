@@ -76,7 +76,7 @@ def update_landlord(landlord_id):
         return abort(404, description = "Error: User not found. Please try again using a registered User.")
     # Display error message if the user isn't an administrator
     if not user.admin:
-        return abort(401, description = "Error: You are not authorised to complete this action. Only administrators can delete Landlord records.")
+        return abort(401, description = "Error: You are not authorised to complete this action. Only administrators can update Landlord records.")
     landlord = Landlord.query.get(landlord_id)
     if not landlord:
         return abort(404, description = "Error: Landlord record does not exist. Please try again.")

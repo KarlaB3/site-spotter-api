@@ -8,3 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
     admin = db.Column(db.Boolean(), default=False)
+    # Set the relationship with other tables
+    landlord = db.relationship("Landlord", back_populates="user")
+    centre = db.relationship("Centre", back_populates="user")
+    site = db.relationship("Site", back_populates="user")
