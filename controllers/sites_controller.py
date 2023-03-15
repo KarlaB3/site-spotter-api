@@ -29,6 +29,13 @@ def get_site(site_id):
     result = site_schema.dump(site)
     return jsonify(result), 200
 
+# # Retrieve a site with landlord data based on the site_id field
+# @sites.get("/join/<int:site_id>")
+# def get_site_all(site_id):
+#     join_site = db.session.query(Site).join(Landlord).filter(Landlord.landlord_id == site_id).all()
+#     result = site_schema.dump(join_site)
+#     return jsonify(result)
+
 # Retrieve a site based on the site attributes
 @sites.get("/search")
 def search_sites():
