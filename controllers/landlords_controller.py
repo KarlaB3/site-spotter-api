@@ -9,14 +9,14 @@ from schemas.landlord_schema import landlord_schema, landlords_schema
 landlords = Blueprint('landlords', __name__, url_prefix="/landlords")
 
 # Retrieve all landlords from the landlords table
-@landlords.get("/")
+@landlords.get("/all")
 def get_landlords():
     all_landlords = Landlord.query.all()
     result = landlords_schema.dump(all_landlords)
     return jsonify(result), 200
 
 # Retrieve a landlord based on the landlord_id field
-@landlords.get("/<int:landlord_id>")
+@landlords.get("/id/<int:landlord_id>")
 def get_landlord_id(landlord_id):
     id_landlord = Landlord.query.get(landlord_id)
     # Display error message if the Landlord ID doesn't exist in the database

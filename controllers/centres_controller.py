@@ -9,14 +9,14 @@ from schemas.centre_schema import centre_schema, centres_schema
 centres = Blueprint('centres', __name__, url_prefix="/centres")
 
 # Retrieve all centres from the centres table
-@centres.get("/")
+@centres.get("/all")
 def get_centres():
     centres_list = Centre.query.all()
     result = centres_schema.dump(centres_list)
     return jsonify(result)
 
 # Retrieve a centre based on the centre_id field
-@centres.get("/<int:centre_id>")
+@centres.get("/id/<int:centre_id>")
 def get_centre(centre_id):
     centre = Centre.query.get(centre_id)
     # Display error message if the Centre ID doesn't exist in the database

@@ -18,7 +18,7 @@ def register_user():
     new_user = User.query.filter_by(email = user_fields["email"]).first()
     # Display error message if the email has already been registered to a user
     if new_user:
-        return jsonify("Error: Email is already registered. Please login or register with a different email.")
+        return abort(409, description = "Error: Email is already registered. Please login or register with a different email.")
     # Crate user new using email and encyrpted password
     new_user = User(email = user_fields["email"], password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8"))
     # Add user to the database
@@ -38,7 +38,7 @@ def login_user():
     user = User.query.filter_by(email = user_fields["email"]).first()
     # Display error message if the email and password combination is incorrect or does not exist
     if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
-        return abort(401, "Error: Incorrect username and/or password. Please try again")
+        return abort(401, description = "Error: Incorrect username and/or password. Please try again")
      # Generate the JSON web token with 1 day expiry 
     token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=1)) 
     return {"email": user.email, "token": token}

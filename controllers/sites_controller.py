@@ -9,14 +9,14 @@ from models.users import User
 sites = Blueprint('sites', __name__, url_prefix="/sites")
 
 # Retrieve all sites from the sites table
-@sites.get("/")
+@sites.get("/all")
 def get_sites():
     sites_list = Site.query.all()
     result = sites_schema.dump(sites_list)
     return jsonify(result)
 
 # Retrieve a site based on the site_id field
-@sites.get("/<int:site_id>")
+@sites.get("/id/<int:site_id>")
 def get_site(site_id):
     site = Site.query.get(site_id)
     # Display error message if the Site ID doesn't exist in the database
